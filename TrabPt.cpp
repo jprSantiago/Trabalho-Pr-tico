@@ -8,7 +8,7 @@ struct campeoes{
     string nome;
     string classe;
     string regiao;
-    int ano;
+    string ano;
     float pickrate;
 };
 
@@ -32,7 +32,7 @@ int binaria(string nomes1[], string pesq, int pos_inicial, int pos_final){
 void BUSCA(int busca1, string pesq, int tam, campeoes perso[], string pesq2);
 
 // Funçao de Busca Sequencial Para as Regioes dos Campeoes.
-void sequencial(string regioes[], string regiao, int cont, int tamanho_original, campeoes perso[]){
+void sequencial(string regioes[], string regiao, int tamanho_original, campeoes perso[]){
     int definidor = 0;
     for(int i = 0; i < tamanho_original; i++){
         if(regiao == regioes[i]){
@@ -111,7 +111,7 @@ void BUSCA(int busca1, string pesq, int tam, campeoes perso[], string pesq2){
         for(int i = 0; i < tam; i++){
             vetorcomregiao[i] = perso[i].regiao;
         }
-        sequencial(vetorcomregiao, pesq, busca1, tam, perso);
+        sequencial(vetorcomregiao, pesq, tam, perso);
         delete[] vetorcomregiao;
     }
 }
@@ -131,6 +131,32 @@ void aloca_vetor(campeoes *&vet, int tamanho_novo, int &tamanho_antigo){
     vet = novo;
     tamanho_antigo = tamanho_novo;
 }
+
+//Procedimento de Organizaçao da Struct Campeoes para a ordem de lançamento(ano).
+void selection_sort(campeoes *&perso, int tam, string *&vetorano){
+
+    int menor;
+    string aux_troca;
+    campeoes aux;
+
+    for (int i = 0; i < tam-1; i++) {
+    menor = i;
+
+   	for (int j = i + 1; j < tam; j++) {
+   		if (vetorano[j] < vetorano[menor]){
+   			menor = j;
+   		}
+   	}
+
+   	aux_troca = vetorano[i];
+    aux = perso[i];
+   	vetorano[i] = vetorano[menor];
+    perso[i] = perso[menor];
+   	vetorano[menor] = aux_troca;
+    perso[menor] = aux;
+    }
+}
+
 
 int main(){
 
@@ -159,8 +185,7 @@ int main(){
             getline(arquivo_csv, perso[i].nome, ',');
             getline(arquivo_csv, perso[i].classe, ',');
             getline(arquivo_csv, perso[i].regiao, ','); 
-            arquivo_csv >> perso[i].ano;
-            arquivo_csv >> lixo;
+            getline(arquivo_csv, perso[i].ano, ',');
             arquivo_csv >> perso[i].pickrate;
             arquivo_csv >> lixo;
             arquivo_csv.ignore();
@@ -189,7 +214,6 @@ int main(){
     // INSERÇAO E RETIRADA DEVE SER FEITO ORDENADAMENTE.
     // APOS A INSERÇAO DEVE SER CAPAZ SALVAR AS ALTERAÇOES.
     // A REMOÇAO PODE SER APENAS UMA MARCAÇAO E NAO UMA REMOÇAO EM SI.
-    // NOSSO ARQUIVO ESTA ORDENADO POR NOME, MAS TAMBEM DEVE SER ORDENADO POR OUTRA FORMA (PICKRATE É UMA OPÇAO).
 
     // Pedido ao usuario se ele quer adicionar, buscar ou remover um campeao.
     cout << "Digite 1 para busca ou digite 2 para a adiçao, digite 3 para a remoçao de um campeao, digte 4 para a exclusao de um campeao, ou 5 para ver determinados campeoes" << endl;
@@ -202,6 +226,7 @@ int main(){
     }
 
     else{
+        //Entrada para Buscar um campeao em específico pelo nome ou regiao.
         if(entrada == 1){
             // Pedido ao usuario se ele quer buscar pela regiao ou nome.
             cout << "Digite 1 para buscar pelo nome ou 2 pela regiao" << endl;
@@ -230,16 +255,22 @@ int main(){
                 }
             }
         }
+
+        //Outras Formas de ver os campeoes.
         else if(entrada == 5){
             cout << "Deseja ver os campeoes em ordem alfabetica ou ordem de lançamento?(1 para alfábetica // 2 para ano de lançamento) " << endl;
             int ordem;
             cin >> ordem;
             cin.ignore();
             busca1 = 2;
+
+            //Campeoes em ordem alfabética.
             if(ordem == 1){
                 cout <<  "De qual campeao dejesa ver?(informe o nome, ou 'todos') " << endl;
                 string primeiro_campeao;
                 getline(cin, primeiro_campeao);
+                
+                //Quantidade limitada de campeoes informado pelo usuario.
                 if(primeiro_campeao != "todos"){
                     cout << "Até qual campeao deseja ver?(informe o nome) " << endl;
                     string segundo_campeao;
@@ -247,6 +278,8 @@ int main(){
                     cin.ignore();
                     BUSCA(busca1, primeiro_campeao, tamanho_vetor, perso, segundo_campeao);
                 }
+
+                //Printado todos os campeoes.
                 else{
                     for(int i = 0; i < tamanho_vetor; i++){
                         cout << perso[i].nome << endl;
@@ -256,6 +289,71 @@ int main(){
                         cout << perso[i].pickrate << endl;
                     }
                 }
+            }
+
+            //Campeoes em ordem de lançamento(ano).
+            else{
+                string *vetorcomano = new string[tamanho_vetor];
+                for(int i = 0; i < tamanho_vetor; i++){
+                    vetorcomano[i] = perso[i].ano;
+                }
+
+                //Chamada da funçao para organizar a struct em ordem de lançamento(ano).
+                selection_sort(perso, tamanho_vetor, vetorcomano);
+               
+                cout << "Qual ano deseja ver? " << endl;
+                string ano1;
+                cin >> ano1;
+                cout << "Deseja ver ate algum outro ano?(S/N) " << endl;
+                char resposta2;
+                cin >> resposta2;
+
+                //Quantidade limitada de campeoes informado pelo usuário.
+                if(resposta2 == 'S'){
+                    cout << "Ate que Ano? " << endl;
+                    string ano2;
+                    cin >> ano2;
+
+                    //Encontrando a Posiçao dos dois anos.
+                    int indice1 = binaria(vetorcomano, ano1, 0, tamanho_vetor);
+                    int indice2 = binaria(vetorcomano, ano2, 0, tamanho_vetor);
+
+                    //Impressao no terminal de todos os personagens dos anos em específicos.
+                    while(perso[indice1].ano == ano1){
+                        cout << perso[indice1].nome << endl;
+                        cout << perso[indice1].classe << endl;
+                        cout << perso[indice1].regiao << endl;
+                        cout << perso[indice1].ano << endl;
+                        cout << perso[indice1].pickrate << endl;
+                        cout << endl;
+                        indice1++;
+                    }
+
+                    while(perso[indice2].ano == ano2){
+                        cout << perso[indice2].nome << endl;
+                        cout << perso[indice2].classe << endl;
+                        cout << perso[indice2].regiao << endl;
+                        cout << perso[indice2].ano << endl;
+                        cout << perso[indice2].pickrate << endl;
+                        cout << endl;
+                        indice2++;
+                    }
+                }
+
+                //Printado no terminal todos os personagens em ordem de lançamento(ano).
+                else{
+                    int indice1 = binaria(vetorcomano, ano1, 0, tamanho_vetor);
+                    while(perso[indice1].ano == ano1){
+                        cout << perso[indice1].nome << endl;
+                        cout << perso[indice1].classe << endl;
+                        cout << perso[indice1].regiao << endl;
+                        cout << perso[indice1].ano << endl;
+                        cout << perso[indice1].pickrate << endl;
+                        cout << endl;
+                        indice1++;
+                    }
+                }
+                delete[] vetorcomano;
             }
         }
     }
