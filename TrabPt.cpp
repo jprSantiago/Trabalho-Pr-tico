@@ -216,11 +216,11 @@ int main(){
     // A REMOÇAO PODE SER APENAS UMA MARCAÇAO E NAO UMA REMOÇAO EM SI.
 
     // Pedido ao usuario se ele quer adicionar, buscar ou remover um campeao.
-    cout << "Digite 1 para busca ou digite 2 para a adiçao, digite 3 para a remoçao de um campeao, digte 4 para a exclusao de um campeao, ou 5 para ver determinados campeoes" << endl;
+    cout << "Digite 1 para buscar, digite 2 para adicionar, digite 3 para remover, digite 4 para reordenar ou digite 5 para ver determinados campeões" << endl;
     cin >> entrada;
 
     if(entrada != 1 and entrada != 2 and entrada != 3 and entrada != 4 and entrada != 5){
-        cout << "Escolha inválida Selecione os números 1, 2, 3, 4 ou 5." << endl;
+        cout << "Escolha inválida. Selecione os números 1, 2, 3, 4 ou 5." << endl;
         entrada = 0;
         cin >> entrada;
     }
