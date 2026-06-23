@@ -166,6 +166,7 @@ int main(){
     campeoes *perso;
     int tamanho_vetor = 0;
     int total;
+    int ordem;
 
     // Leitura do Arquivo LOL.csv.
     ifstream arquivo_csv("LOL.csv");
@@ -178,6 +179,7 @@ int main(){
         getline(arquivo_csv, linha);
         arquivo_csv >> capacidade;
         arquivo_csv >> total;
+        arquivo_csv >> ordem;
         arquivo_csv.ignore();
         perso = new campeoes[capacidade];
 
@@ -219,140 +221,69 @@ int main(){
     
     bool sair = false;// Variavel para o loop de escolha do usuario.
     while(!sair){// Loop do sistema.
-        cout << "Digite 1 para buscar, digite 2 para adicionar, digite 3 para remover, digite 4 para reordenar, digite 5 para ver determinados campeões, digite 6 para salvar ou digite 7 para sair: " << endl;
+        cout << "Digite [1] para buscar" << endl << "Digite [2] para adicionar" << endl << "Digite [3] para remover" << endl << "Digite [4] para reordenar" << endl << "Digite [5] para salvar" << endl << "Digite [6] para sair " << endl << "Digite sua opção:";
         cin >> entrada;
         //Entrada para Buscar um campeao em específico pelo nome ou regiao.
         if(entrada == 1){
             // Pedido ao usuario se ele quer buscar pela regiao ou nome.
-            cout << "Digite 1 para buscar pelo nome ou digite 2 para buscar pela regiao" << endl;
+            cout << "Digite [1] para buscar pelo nome"<< endl << "digite [2] para buscar pela regiao"<< endl << "[3] se deseja ver sequência de campeões" << endl << "Digite sua opção: ";
             cin >> busca1;
 
-            if(busca1 != 1 and busca1 != 2){
-                cout << "Escolha inválida. Selecione os números 1 ou 2." << endl;
+            // Validaçao da entrada do usuario.
+            if(busca1 != 1 and busca1 != 2 and busca1 != 3){
+                cout << "Escolha inválida. Selecione os números [1], [2] ou [3]." << endl;
                 busca1 = 0;
                 cin >> busca1;
             }
 
-            else{
-                if(busca1 == 1){
+            // Entrada para buscar pelo nome do campeao.
+            else if(busca1 == 1){
+                if(ordem==1){//Ordenado por nome.
+                string nome;
+                cout << "Digite o nome do campeão: " << endl;
+                cin >> nome;
+                // Chamado da Funçao Busca pelo nome.
+                BUSCA(busca1, nome, tamanho_vetor, perso, nada);
+                }
+                else{//Ordenado por ano.
+                    selection_sort(perso, tamanho_vetor, perso[0].nome);//Alterar para ordenar por nome.
                     string nome;
                     cout << "Digite o nome do campeão: " << endl;
                     cin >> nome;
-                    // Chamado da Funçao Busca pelo nome.
                     BUSCA(busca1, nome, tamanho_vetor, perso, nada);
-                }
-                else{
-                    string regiao;
-                    cout << "Digite o nome da região: " << endl;
-                    cin >> regiao;
-                    // Chamado da funçao Busca pela regiao.
-                    BUSCA(busca1, regiao, tamanho_vetor, perso, nada);
+                    selection_sort(perso, tamanho_vetor, perso[0].ano);//Criar função de criação de vetor e passar por referência.
                 }
             }
-        }
-
-        //Entrada para adicionar um campeão.
-        else if(entrada == 2){
-            campeoes novo_campeao;
-            cout << "Digite o nome, a classe, a região, o ano de lançamento e o pickrate do campeão a ser adicionado: " << endl;
-            cout << "Ex: Aatrox,Lutador,Runeterra,2013,6.3; " << endl;
-            cin.ignore();
-            getline(cin, novo_campeao.nome, ',');
-            getline(cin, novo_campeao.classe, ',');
-            getline(cin, novo_campeao.regiao, ',');
-            getline(cin, novo_campeao.ano, ',');
-            cin >> novo_campeao.pickrate;
-            cin.ignore();
-        }
-
-        //Entrada para remover um campeão.
-        else if(entrada == 3){
-            string nome_remover;
-            cout << "Digite o nome do campeão a ser removido: " << endl;
-            cin >> nome_remover;
-        }
-        
-        //Entrada para reordenar os campeões.
-        else if(entrada == 4){
-            cout << "Digite 1 para reordenar em ordem alfabética ou digite 2 para reordenar por ano de lançamento: " << endl;
-            int ordem;
-            cin >> ordem;
-            cin.ignore();
-            busca1 = 2;
-
-            if(ordem != 1 and ordem != 2){
-                cout << "Escolha inválida. Selecione os números 1 ou 2." << endl;
-                ordem = 0;
-                cin >> ordem;
+            else if(busca1 == 2){// Entrada para buscar pela regiao do campeao.
+                string regiao;
+                cout << "Digite o nome da região: " << endl;
+                cin >> regiao;
+                // Chamado da funçao Busca pela regiao.
+                BUSCA(busca1, regiao, tamanho_vetor, perso, nada);
             }
-            
-            //Reordenando campeoes em ordem alfabética.
-            else if(ordem == 1){
-                string *vetorcomnomes = new string[tamanho_vetor];
-                for(int i = 0; i < tamanho_vetor; i++){
-                    vetorcomnomes[i] = perso[i].nome;
+            else if(busca1 == 3){// Entrada para buscar uma quantidade limitada de campeoes.
+                if(ordem==1){//Ordenado por nome.
+                    string nome1, nome2;
+                    cout << "Digite o nome do primeiro campeão: " << endl;
+                    cin >> nome1;
+                    cout << "Digite o nome do segundo campeão: " << endl;
+                    cin >> nome2;
+                    BUSCA(busca1, nome1, tamanho_vetor, perso, nome2);
+                }
+                else{//Ordenado por ano.
+                    cout << "Para buscar por nome, os campeões serão considerdos em ordem alfabética." << endl;
+                    selection_sort(perso, tamanho_vetor, perso[0].nome);//Alterar para ordenar por nome.
+                    string nome1, nome2;
+                    cout << "Digite o nome do primeiro campeão: " << endl;
+                    cin >> nome1;
+                    cout << "Digite o nome do segundo campeão: " << endl;
+                    cin >> nome2;
+                    BUSCA(busca1, nome1, tamanho_vetor, perso, nome2);
+                    selection_sort(perso, tamanho_vetor, perso[0].ano);//Criar função de criação de vetor e passar por referência.
                 }
 
-                //Chamada da funçao para organizar a struct em ordem alfabética.
-                selection_sort(perso, tamanho_vetor, vetorcomnomes);
-                delete[] vetorcomnomes;
-            }
-
-            //Reordenando campeoes em ordem de lançamento(ano).
-            else{
-                string *vetorcomano = new string[tamanho_vetor];
-                for(int i = 0; i < tamanho_vetor; i++){
-                    vetorcomano[i] = perso[i].ano;
-                }
-
-                //Chamada da funçao para organizar a struct em ordem de lançamento(ano).
-                selection_sort(perso, tamanho_vetor, vetorcomano);
-                delete[] vetorcomano;
-            }
-        }
-
-        //Outras Formas de ver os campeoes.
-        else if(entrada == 5){
-            cout << "Digite 1 para ver os campeões em ordem alfabética ou digite 2 para ver em ordem por ano de lançamento: " << endl;
-            int ordem;
-            cin >> ordem;
-            cin.ignore();
-            busca1 = 2;
-
-           if(ordem != 1 and ordem != 2){
-                cout << "Escolha inválida. Selecione os números 1 ou 2." << endl;
-                ordem = 0;
-                cin >> ordem;
-            }
-           
-            //Campeoes em ordem alfabética.
-            else if(ordem == 1){
-                cout <<  "De qual campeao dejesa ver?(informe o nome, ou 'todos') " << endl;
-                string primeiro_campeao;
-                getline(cin, primeiro_campeao);
-                
-                //Quantidade limitada de campeoes informado pelo usuario.
-                if(primeiro_campeao != "todos"){
-                    cout << "Até qual campeao deseja ver?(informe o nome) " << endl;
-                    string segundo_campeao;
-                    getline(cin, segundo_campeao);
-                    BUSCA(busca1, primeiro_campeao, tamanho_vetor, perso, segundo_campeao);
-                }
-
-                //Printado todos os campeoes.
-                else{
-                    for(int i = 0; i < tamanho_vetor; i++){
-                        cout << perso[i].nome << endl;
-                        cout << perso[i].classe << endl;
-                        cout << perso[i].regiao << endl;
-                        cout << perso[i].ano << endl;
-                        cout << perso[i].pickrate << endl;
-                    }
-                }
-            }
-
-            //Campeoes em ordem de lançamento(ano).
-            else{
+               /*
+                //Campeoes em ordem de lançamento(ano).
                 string *vetorcomano = new string[tamanho_vetor];
                 for(int i = 0; i < tamanho_vetor; i++){
                     vetorcomano[i] = perso[i].ano;
@@ -370,7 +301,7 @@ int main(){
 
                 //Quantidade limitada de campeoes informado pelo usuário.
                 if(resposta2 == 'S'){
-                    cout << "Ate que Ano? " << endl;
+                    cout << "Ate qual Ano? " << endl;
                     string ano2;
                     cin >> ano2;
 
@@ -414,23 +345,81 @@ int main(){
                     }
                 }
                 delete[] vetorcomano;
-            }
+            }*/
+        }
+        //Entrada para adicionar um campeão.
+        else if(entrada == 2){
+            campeoes novo_campeao;
+            cout << "Digite o nome, a classe, a região, o ano de lançamento e o pickrate do campeão a ser adicionado: " << endl;
+            cout << "Ex: Aatrox,Lutador,Runeterra,2013,6.3; " << endl;
+            cin.ignore();
+            getline(cin, novo_campeao.nome, ',');
+            getline(cin, novo_campeao.classe, ',');
+            getline(cin, novo_campeao.regiao, ',');
+            getline(cin, novo_campeao.ano, ',');
+            cin >> novo_campeao.pickrate;
+            cin.ignore();
         }
 
+        //Entrada para remover um campeão.
+        else if(entrada == 3){
+            string nome_remover;
+            cout << "Digite o nome do campeão a ser removido: " << endl;
+            cin >> nome_remover;
+        }
+        
+        //Entrada para reordenar os campeões.
+        else if(entrada == 4){
+            cout << "Digite [1] para reordenar em ordem alfabética"<< endl <<" digite [2] para reordenar por ano de lançamento " << endl << "Digite sua opção: ";
+            cin >> ordem;
+            cin.ignore();
+            busca1 = 2;
+
+            if(ordem != 1 and ordem != 2){
+                cout << "Escolha inválida. Selecione os números [1] ou [2]." << endl;
+                ordem = 0;
+                cin >> ordem;
+            }
+            
+            //Reordenando campeoes em ordem alfabética.
+            else if(ordem == 1){
+                string *vetorcomnomes = new string[tamanho_vetor];
+                for(int i = 0; i < tamanho_vetor; i++){
+                    vetorcomnomes[i] = perso[i].nome;
+                }
+
+                //Chamada da funçao para organizar a struct em ordem alfabética.
+                selection_sort(perso, tamanho_vetor, vetorcomnomes);
+                delete[] vetorcomnomes;
+            }
+
+            //Reordenando campeoes em ordem de lançamento(ano).
+            else{
+                string *vetorcomano = new string[tamanho_vetor];
+                for(int i = 0; i < tamanho_vetor; i++){
+                    vetorcomano[i] = perso[i].ano;
+                }
+
+                //Chamada da funçao para organizar a struct em ordem de lançamento(ano).
+                selection_sort(perso, tamanho_vetor, vetorcomano);
+                delete[] vetorcomano;
+            }
+        }
+        
         //Entrada para salvar as alterações feitas no programa.
-        else if(entrada == 6){
+        else if(entrada == 5){
             //Salvar as alterações feitas no programa.
         }
 
         //Entrada para sair do programa.
-        else if(entrada == 7){
+        else if(entrada == 6){
             cout << "Saindo do programa." << endl;
             sair = true;
         }
        
         //Entrada inválida.
         else{
-            cout << "Escolha inválida. Selecione os números 1, 2, 3, 4, 5, 6 ou 7." << endl;
+            cout << "Escolha inválida! "<< endl <<" Selecione os números [1], [2], [3], [4], [5] ou [6]." << endl <<" Digite sua opção: ";
         }
     }
    
