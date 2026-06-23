@@ -219,16 +219,8 @@ int main(){
     
     bool sair = false;// Variavel para o loop de escolha do usuario.
     while(!sair){// Loop do sistema.
-    cout << "Digite 1 para buscar, digite 2 para adicionar, digite 3 para remover, digite 4 para reordenar, digite 5 para ver determinados campeões, digite 6 para salvar ou digite 7 para sair: " << endl;
-    cin >> entrada;
-
-    if(entrada != 1 and entrada != 2 and entrada != 3 and entrada != 4 and entrada != 5 and entrada != 6 and entrada != 7){
-        cout << "Escolha inválida. Selecione os números 1, 2, 3, 4, 5, 6 ou 7." << endl;
-        entrada = 0;
+        cout << "Digite 1 para buscar, digite 2 para adicionar, digite 3 para remover, digite 4 para reordenar, digite 5 para ver determinados campeões, digite 6 para salvar ou digite 7 para sair: " << endl;
         cin >> entrada;
-    }
-
-    else{
         //Entrada para Buscar um campeao em específico pelo nome ou regiao.
         if(entrada == 1){
             // Pedido ao usuario se ele quer buscar pela regiao ou nome.
@@ -344,7 +336,6 @@ int main(){
                     cout << "Até qual campeao deseja ver?(informe o nome) " << endl;
                     string segundo_campeao;
                     getline(cin, segundo_campeao);
-                    cin.ignore();
                     BUSCA(busca1, primeiro_campeao, tamanho_vetor, perso, segundo_campeao);
                 }
 
@@ -434,10 +425,14 @@ int main(){
         //Entrada para sair do programa.
         else if(entrada == 7){
             cout << "Saindo do programa." << endl;
-            bool sair = true;
+            sair = true;
+        }
+        
+        else{
+            cout << "Escolha inválida. Selecione os números 1, 2, 3, 4, 5, 6 ou 7." << endl;
         }
     }
-    }    
+   
     arquivo_csv.close();
     delete[] perso;
     return 0;
