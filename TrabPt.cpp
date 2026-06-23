@@ -229,11 +229,11 @@ int main(){
         //Entrada para Buscar um campeao em específico pelo nome ou regiao.
         if(entrada == 1){
             // Pedido ao usuario se ele quer buscar pela regiao ou nome.
-            cout << "Digite 1 para buscar pelo nome ou 2 pela regiao" << endl;
+            cout << "Digite 1 para buscar pelo nome ou digite 2 para buscar pela regiao" << endl;
             cin >> busca1;
 
             if(busca1 != 1 and busca1 != 2){
-                cout << "Escolha inválida Selecione os números 1 ou 2." << endl;
+                cout << "Escolha inválida. Selecione os números 1 ou 2." << endl;
                 busca1 = 0;
                 cin >> busca1;
             }
@@ -241,14 +241,14 @@ int main(){
             else{
                 if(busca1 == 1){
                     string nome;
-                    cout << "Digite o nome que quer buscar: " << endl;
+                    cout << "Digite o nome do campeão: " << endl;
                     cin >> nome;
                     // Chamado da Funçao Busca pelo nome.
                     BUSCA(busca1, nome, tamanho_vetor, perso, nada);
                 }
                 else{
                     string regiao;
-                    cout << "Digite a regiao que quer buscar: " << endl;
+                    cout << "Digite o nome da região: " << endl;
                     cin >> regiao;
                     // Chamado da funçao Busca pela regiao.
                     BUSCA(busca1, regiao, tamanho_vetor, perso, nada);
@@ -258,7 +258,7 @@ int main(){
 
         //Outras Formas de ver os campeoes.
         else if(entrada == 5){
-            cout << "Deseja ver os campeoes em ordem alfabetica ou ordem de lançamento?(1 para alfábetica // 2 para ano de lançamento) " << endl;
+            cout << "Digite 1 para ver os campeões em ordem alfabética ou digite 2 para ver em ordem por ano de lançamento: " << endl;
             int ordem;
             cin >> ordem;
             cin.ignore();
