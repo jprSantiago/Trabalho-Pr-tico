@@ -86,7 +86,7 @@ void sequencial(string regioes[], string regiao, int tamanho_original, campeoes 
     }
 }
 
-// Procedimento de Busca onde Retorna o Campeao Buscado.
+// Procedimento de Busca onde Retorna o Campeao Buscado através do redirecionamento da busca correta.
 void BUSCA(int busca1, string pesq, int tam, campeoes perso[], string pesq2){
     if(busca1 == 1 or busca1 == 2){
         string* vetorcomnomes = new string[tam];
@@ -185,6 +185,7 @@ void selection_sort(campeoes *&perso, int tam, string *&vetor_pivo){
     }
 }
 
+//Procedimento de Ordenaçao por Inserçao.
 void shell_sort(campeoes *&perso, int tamanho){
     
     int gaps[8] = {1, 4, 10, 23, 57, 132, 301, 701};
@@ -216,6 +217,7 @@ void shell_sort(campeoes *&perso, int tamanho){
     }
 }
 
+//Procedimento de Ordenaçao onde redireciona para a ordenaçao correta.
 void ORDENACAO(int qual_ordenacao, campeoes perso[], int tamanho){
 
     if(qual_ordenacao == 1){
@@ -236,6 +238,7 @@ void ORDENACAO(int qual_ordenacao, campeoes perso[], int tamanho){
     }
 }
 
+//Procedimento que deixa as letras em Maiúsculo.
 void maiusculo(string &para_transformar){
     for (int i = 0; i < para_transformar.length(); i++) {
         para_transformar[i] = toupper(para_transformar[i]);
@@ -407,8 +410,11 @@ int main(){
                 cout << "Ex: Aatrox,Lutador,Runeterra,2013,6.3; " << endl;
                 cin.ignore();
                 getline(cin, novo_campeao.nome, ',');
+                maiusculo(novo_campeao.nome);
                 getline(cin, novo_campeao.classe, ',');
+                maiusculo(novo_campeao.classe);
                 getline(cin, novo_campeao.regiao, ',');
+                maiusculo(novo_campeao.regiao);
                 getline(cin, novo_campeao.ano, ',');
                 cin >> novo_campeao.pickrate;
                 cin.ignore();
@@ -426,8 +432,11 @@ int main(){
                 cout << "Ex: Aatrox,Lutador,Runeterra,2013,6.3; " << endl;
                 cin.ignore();
                 getline(cin, novo_campeao.nome, ',');
+                maiusculo(novo_campeao.nome);
                 getline(cin, novo_campeao.classe, ',');
+                maiusculo(novo_campeao.classe);
                 getline(cin, novo_campeao.regiao, ',');
+                maiusculo(novo_campeao.regiao);
                 getline(cin, novo_campeao.ano, ',');
                 cin >> novo_campeao.pickrate;
                 cin.ignore();
