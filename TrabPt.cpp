@@ -12,6 +12,32 @@ struct campeoes{
     float pickrate;
 };
 
+//Função para gravar as alterações no arquivo CSV.
+void Gravar_csv(campeoes *perso, int tamanho_vetor, int capacidade, int ordem){
+    ofstream arquivo_csv("LOL.csv");
+    if(not(arquivo_csv)){
+        cout << "Erro ao abrir o arquivo para gravação." << endl;
+        return;
+    }
+    arquivo_csv << "#nome,classe,regiao,ano de lançamento,pickrate em %;" << endl;
+    arquivo_csv << capacidade << endl;
+    arquivo_csv << tamanho_vetor << endl;
+    arquivo_csv << ordem << endl;
+
+    for(int i = 0; i < tamanho_vetor; i++){
+        arquivo_csv << perso[i].nome << "," 
+                    << perso[i].classe << "," 
+                    << perso[i].regiao << "," 
+                    << perso[i].ano << "," 
+                    << perso[i].pickrate << ";";
+        if(i < tamanho_vetor - 1){
+            arquivo_csv << endl;
+        }
+    }
+
+    arquivo_csv.close();
+}
+
 // Funçao de Busca Binaria para os nomes de campeoes.
 int binaria(string nomes1[], string pesq, int pos_inicial, int pos_final){
     if(pos_inicial > pos_final) return -1;
@@ -408,7 +434,7 @@ int main(){
         
         //Entrada para salvar as alterações feitas no programa.
         else if(entrada == 5){
-            Gravar_csv(perso, tamanho_vetor, capacidade, total, ordem);//Criar subprograma para gravar as alterações no arquivo CSV.
+            Gravar_csv(perso, tamanho_vetor, capacidade, ordem);//Criar subprograma para gravar as alterações no arquivo CSV.
         }
 
         //Entrada para sair do programa.
