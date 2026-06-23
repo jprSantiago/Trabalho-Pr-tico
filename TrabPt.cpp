@@ -1,5 +1,7 @@
 #include <iostream>
 #include <fstream>
+#include <ctype.h>
+#include <string>
 
 using namespace std;
 
@@ -14,28 +16,28 @@ struct campeoes{
 
 //Função para gravar as alterações no arquivo CSV.
 void Gravar_csv(campeoes *perso, int tamanho_vetor, int capacidade, int ordem){
-    ofstream arquivo_csv("LOL.csv");
-    if(not(arquivo_csv)){
+    ofstream arquivo2_csv("LOL.csv");
+    if(not(arquivo2_csv)){
         cout << "Erro ao abrir o arquivo para gravação." << endl;
         return;
     }
-    arquivo_csv << "#nome,classe,regiao,ano de lançamento,pickrate em %;" << endl;
-    arquivo_csv << capacidade << endl;
-    arquivo_csv << tamanho_vetor << endl;
-    arquivo_csv << ordem << endl;
+    arquivo2_csv << "#nome,classe,regiao,ano de lançamento,pickrate em %;" << endl;
+    arquivo2_csv << capacidade << endl;
+    arquivo2_csv << tamanho_vetor << endl;
+    arquivo2_csv << ordem << endl;
 
     for(int i = 0; i < tamanho_vetor; i++){
-        arquivo_csv << perso[i].nome << "," 
+        arquivo2_csv << perso[i].nome << "," 
                     << perso[i].classe << "," 
                     << perso[i].regiao << "," 
                     << perso[i].ano << "," 
                     << perso[i].pickrate << ";";
         if(i < tamanho_vetor - 1){
-            arquivo_csv << endl;
+            arquivo2_csv << endl;
         }
     }
 
-    arquivo_csv.close();
+    arquivo2_csv.close();
 }
 
 // Funçao de Busca Binaria para os nomes de campeoes.
@@ -159,7 +161,7 @@ void aloca_vetor(campeoes *&vet, int tamanho_novo, int &tamanho_antigo){
 }
 
 //Procedimento de Organizaçao da Struct Campeoes para a ordem de lançamento(ano).
-void selection_sort(campeoes *&perso, int tam, string *&vetorano){
+void selection_sort(campeoes *&perso, int tam, string *&vetor_pivo){
 
     int menor;
     string aux_troca;
@@ -169,20 +171,47 @@ void selection_sort(campeoes *&perso, int tam, string *&vetorano){
     menor = i;
 
    	for (int j = i + 1; j < tam; j++) {
-   		if (vetorano[j] < vetorano[menor]){
+   		if (vetor_pivo[j] < vetor_pivo[menor]){
    			menor = j;
    		}
    	}
 
-   	aux_troca = vetorano[i];
+   	aux_troca = vetor_pivo[i];
     aux = perso[i];
-   	vetorano[i] = vetorano[menor];
+   	vetor_pivo[i] = vetor_pivo[menor];
     perso[i] = perso[menor];
-   	vetorano[menor] = aux_troca;
+   	vetor_pivo[menor] = aux_troca;
     perso[menor] = aux;
     }
 }
 
+void shell(){}
+
+void ORDENACAO(int qual_ordenacao, campeoes perso[], int tamanho){
+
+    if(qual_ordenacao == 1){
+        string *vetorcomnomes = new string[tamanho];
+        for(int i = 0; i < tamanho; i++){
+            vetorcomnomes[i] = perso[i].nome;
+        }
+        selection_sort(perso, tamanho, vetorcomnomes);
+        delete[] vetorcomnomes;
+    }
+    else{
+        string *vetorcomano = new string[tamanho];
+        for(int i = 0; i < tamanho; i++){
+            vetorcomano[i] = perso[i].ano;
+        }
+        selection_sort(perso, tamanho, vetorcomano);
+        delete[] vetorcomano;
+    }
+}
+
+void maiusculo(string &para_transformar){
+    for (int i = 0; i < para_transformar.length(); i++) {
+        para_transformar[i] = toupper(para_transformar[i]);
+    }
+}
 
 int main(){
 
@@ -240,17 +269,20 @@ int main(){
 
     // PARA A INSERÇAO DE UM NOVO CAMPEAO, ALOCAR DINAMICAMENTE MAIS 1 DE ESPAÇO POR VEZ.
     // INSERÇAO E RETIRADA DEVE SER FEITO ORDENADAMENTE.
-    // APOS A INSERÇAO DEVE SER CAPAZ SALVAR AS ALTERAÇOES.
     // A REMOÇAO PODE SER APENAS UMA MARCAÇAO E NAO UMA REMOÇAO EM SI.
 
     // Pedido ao usuario se ele quer adicionar, buscar ou remover um campeao.
-    
-    bool sair = false;// Variavel para o loop de escolha do usuario.
-    while(!sair){// Loop do sistema.
+    // Variavel para o loop de escolha do usuario.
+    bool sair = false;
+    // Loop do sistema.
+    while(!sair){
+
         cout << "Digite [1] para buscar" << endl << "Digite [2] para adicionar" << endl << "Digite [3] para remover" << endl << "Digite [4] para reordenar" << endl << "Digite [5] para salvar" << endl << "Digite [6] para sair " << endl << "Digite sua opção:";
         cin >> entrada;
+
         //Entrada para Buscar um campeao em específico pelo nome ou regiao.
         if(entrada == 1){
+
             // Pedido ao usuario se ele quer buscar pela regiao ou nome.
             cout << "Digite [1] para buscar pelo nome"<< endl << "digite [2] para buscar pela regiao"<< endl << "[3] se deseja ver sequência de campeões" << endl << "Digite sua opção: ";
             cin >> busca1;
@@ -264,115 +296,77 @@ int main(){
 
             // Entrada para buscar pelo nome do campeao.
             else if(busca1 == 1){
-                if(ordem==1){//Ordenado por nome.
+
+                //Ordenado por nome.
+                if(ordem==1){
                 string nome;
                 cout << "Digite o nome do campeão: " << endl;
                 cin >> nome;
+                maiusculo(nome);
+                
                 // Chamado da Funçao Busca pelo nome.
                 BUSCA(busca1, nome, tamanho_vetor, perso, nada);
                 }
-                else{//Ordenado por ano.
-                    selection_sort(perso, tamanho_vetor, perso[0].nome);//Alterar para ordenar por nome.
+
+                //Ordenado por ano.
+                else{
+                    int qual = 1;
+                    ORDENACAO(qual, perso, tamanho_vetor);
                     string nome;
                     cout << "Digite o nome do campeão: " << endl;
                     cin >> nome;
-                    BUSCA(busca1, nome, tamanho_vetor, perso, nada);
-                    selection_sort(perso, tamanho_vetor, perso[0].ano);//Criar função de criação de vetor e passar por referência.
+                    maiusculo(nome);
+                    int busca2 = 1;
+                    BUSCA(busca2, nome, tamanho_vetor, perso, nada);
+                    qual = 2;
+                    ORDENACAO(qual, perso, tamanho_vetor);
                 }
             }
-            else if(busca1 == 2){// Entrada para buscar pela regiao do campeao.
+
+            // Entrada para buscar pela regiao do campeao.
+            else if(busca1 == 2){
                 string regiao;
                 cout << "Digite o nome da região: " << endl;
                 cin >> regiao;
+                maiusculo(regiao);
                 // Chamado da funçao Busca pela regiao.
                 BUSCA(busca1, regiao, tamanho_vetor, perso, nada);
             }
-            else if(busca1 == 3){// Entrada para buscar uma quantidade limitada de campeoes.
-                if(ordem==1){//Ordenado por nome.
+
+            // Entrada para buscar uma quantidade limitada de campeoes.
+            else if(busca1 == 3){
+
+                //Ordenado por nome.
+                if(ordem==1){
                     string nome1, nome2;
                     cout << "Digite o nome do primeiro campeão: " << endl;
                     cin >> nome1;
+                    maiusculo(nome1);
                     cout << "Digite o nome do segundo campeão: " << endl;
                     cin >> nome2;
+                    maiusculo(nome2);
                     BUSCA(busca1, nome1, tamanho_vetor, perso, nome2);
                 }
-                else{//Ordenado por ano.
-                    cout << "Para buscar por nome, os campeões serão considerdos em ordem alfabética." << endl;
-                    selection_sort(perso, tamanho_vetor, perso[0].nome);//Alterar para ordenar por nome.
-                    string nome1, nome2;
-                    cout << "Digite o nome do primeiro campeão: " << endl;
-                    cin >> nome1;
-                    cout << "Digite o nome do segundo campeão: " << endl;
-                    cin >> nome2;
-                    BUSCA(busca1, nome1, tamanho_vetor, perso, nome2);
-                    selection_sort(perso, tamanho_vetor, perso[0].ano);//Criar função de criação de vetor e passar por referência.
-                }
 
-               /*
-                //Campeoes em ordem de lançamento(ano).
-                string *vetorcomano = new string[tamanho_vetor];
-                for(int i = 0; i < tamanho_vetor; i++){
-                    vetorcomano[i] = perso[i].ano;
-                }
-
-                //Chamada da funçao para organizar a struct em ordem de lançamento(ano).
-                selection_sort(perso, tamanho_vetor, vetorcomano);
-               
-                cout << "Qual ano deseja ver? " << endl;
-                string ano1;
-                cin >> ano1;
-                cout << "Deseja ver ate algum outro ano?(S/N) " << endl;
-                char resposta2;
-                cin >> resposta2;
-
-                //Quantidade limitada de campeoes informado pelo usuário.
-                if(resposta2 == 'S'){
-                    cout << "Ate qual Ano? " << endl;
-                    string ano2;
-                    cin >> ano2;
-
-                    //Encontrando a Posiçao dos dois anos.
-                    int indice1 = binaria(vetorcomano, ano1, 0, tamanho_vetor);
-                    int indice2 = binaria(vetorcomano, ano2, 0, tamanho_vetor);
-
-                    //Impressao no terminal de todos os personagens dos anos em específicos.
-                    while(perso[indice1].ano == ano1){
-                        cout << perso[indice1].nome << endl;
-                        cout << perso[indice1].classe << endl;
-                        cout << perso[indice1].regiao << endl;
-                        cout << perso[indice1].ano << endl;
-                        cout << perso[indice1].pickrate << endl;
-                        cout << endl;
-                        indice1++;
-                    }
-
-                    while(perso[indice2].ano == ano2){
-                        cout << perso[indice2].nome << endl;
-                        cout << perso[indice2].classe << endl;
-                        cout << perso[indice2].regiao << endl;
-                        cout << perso[indice2].ano << endl;
-                        cout << perso[indice2].pickrate << endl;
-                        cout << endl;
-                        indice2++;
-                    }
-                }
-
-                //Printado no terminal todos os personagens em ordem de lançamento(ano).
+                //Ordenado por ano.
                 else{
-                    int indice1 = binaria(vetorcomano, ano1, 0, tamanho_vetor);
-                    while(perso[indice1].ano == ano1){
-                        cout << perso[indice1].nome << endl;
-                        cout << perso[indice1].classe << endl;
-                        cout << perso[indice1].regiao << endl;
-                        cout << perso[indice1].ano << endl;
-                        cout << perso[indice1].pickrate << endl;
-                        cout << endl;
-                        indice1++;
-                    }
+                    cout << "Para buscar por nome, os campeões serão considerdos em ordem alfabética." << endl;
+                    int qual = 1;
+                    ORDENACAO(qual, perso, tamanho_vetor);//Alterar para ordenar por nome.
+                    string nome1, nome2;
+                    cout << "Digite o nome do primeiro campeão: " << endl;
+                    cin >> nome1;
+                    maiusculo(nome1);
+                    cout << "Digite o nome do segundo campeão: " << endl;
+                    cin >> nome2;
+                    maiusculo(nome2);
+                    BUSCA(busca1, nome1, tamanho_vetor, perso, nome2);
+                    qual = 2;
+                    ORDENACAO(qual, perso, tamanho_vetor);
                 }
-                delete[] vetorcomano;
-            }*/
+            }
         }
+
         //Entrada para adicionar um campeão.
         else if(entrada == 2){
             campeoes novo_campeao;
@@ -385,6 +379,7 @@ int main(){
             getline(cin, novo_campeao.ano, ',');
             cin >> novo_campeao.pickrate;
             cin.ignore();
+            //FALTA FAZER A SHELL SORT E COLOCAR TUDO EM MAIUSCULO.
         }
 
         //Entrada para remover um campeão.
@@ -392,6 +387,8 @@ int main(){
             string nome_remover;
             cout << "Digite o nome do campeão a ser removido: " << endl;
             cin >> nome_remover;
+            maiusculo(nome_remover);
+            //FALTA FAZER O REDIMENSIONAMENTO.
         }
         
         //Entrada para reordenar os campeões.
@@ -399,7 +396,6 @@ int main(){
             cout << "Digite [1] para reordenar em ordem alfabética"<< endl <<" digite [2] para reordenar por ano de lançamento " << endl << "Digite sua opção: ";
             cin >> ordem;
             cin.ignore();
-            busca1 = 2;
 
             if(ordem != 1 and ordem != 2){
                 cout << "Escolha inválida. Selecione os números [1] ou [2]." << endl;
@@ -409,32 +405,23 @@ int main(){
             
             //Reordenando campeoes em ordem alfabética.
             else if(ordem == 1){
-                string *vetorcomnomes = new string[tamanho_vetor];
-                for(int i = 0; i < tamanho_vetor; i++){
-                    vetorcomnomes[i] = perso[i].nome;
-                }
-
+                int qual = 1;
                 //Chamada da funçao para organizar a struct em ordem alfabética.
-                selection_sort(perso, tamanho_vetor, vetorcomnomes);
-                delete[] vetorcomnomes;
+                ORDENACAO(qual, perso, tamanho_vetor);
             }
 
             //Reordenando campeoes em ordem de lançamento(ano).
             else{
-                string *vetorcomano = new string[tamanho_vetor];
-                for(int i = 0; i < tamanho_vetor; i++){
-                    vetorcomano[i] = perso[i].ano;
-                }
-
+                int qual = 2;
                 //Chamada da funçao para organizar a struct em ordem de lançamento(ano).
-                selection_sort(perso, tamanho_vetor, vetorcomano);
-                delete[] vetorcomano;
+                ORDENACAO(qual, perso, tamanho_vetor);
             }
         }
         
         //Entrada para salvar as alterações feitas no programa.
         else if(entrada == 5){
-            Gravar_csv(perso, tamanho_vetor, capacidade, ordem);//Criar subprograma para gravar as alterações no arquivo CSV.
+            //Criar subprograma para gravar as alterações no arquivo CSV.
+            Gravar_csv(perso, tamanho_vetor, capacidade, ordem);
         }
 
         //Entrada para sair do programa.
