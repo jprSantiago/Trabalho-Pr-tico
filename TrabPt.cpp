@@ -408,7 +408,7 @@ int main(){
         
         //Entrada para salvar as alterações feitas no programa.
         else if(entrada == 5){
-            //Salvar as alterações feitas no programa.
+            Gravar_csv(perso, tamanho_vetor, capacidade, total, ordem);//Criar subprograma para gravar as alterações no arquivo CSV.
         }
 
         //Entrada para sair do programa.
