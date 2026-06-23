@@ -185,7 +185,36 @@ void selection_sort(campeoes *&perso, int tam, string *&vetor_pivo){
     }
 }
 
-void shell(){}
+void shell_sort(campeoes *&perso, int tamanho){
+    
+    int gaps[8] = {1, 4, 10, 23, 57, 132, 301, 701};
+    int pos_gap = 7;
+    while (gaps[pos_gap] > tamanho) {
+        pos_gap--;
+    }    
+    string value;
+    campeoes aux;
+    int j;
+    while ( pos_gap >= 0 ){
+        int gap = gaps[pos_gap];
+        cout << "gap: " << gap << endl;
+
+        for (int i = gap; i < tamanho; i++) {
+            value = perso[i].nome;
+            aux = perso[i];
+            j = i;
+            while ((j >= gap) and (value < perso[j - gap].nome)) {
+                perso[j].nome = perso[j - gap].nome;
+                perso[j] = perso[j - gap];
+                j = j - gap;
+            }
+            perso[j].nome = value;
+            perso[j] = aux;
+        }
+
+        pos_gap--;
+    }
+}
 
 void ORDENACAO(int qual_ordenacao, campeoes perso[], int tamanho){
 
@@ -267,7 +296,7 @@ int main(){
     int busca1 = 0;
     string nada = "nada";
 
-    // PARA A INSERÇAO DE UM NOVO CAMPEAO, ALOCAR DINAMICAMENTE MAIS 1 DE ESPAÇO POR VEZ.
+    
     // INSERÇAO E RETIRADA DEVE SER FEITO ORDENADAMENTE.
     // A REMOÇAO PODE SER APENAS UMA MARCAÇAO E NAO UMA REMOÇAO EM SI.
 
@@ -369,17 +398,41 @@ int main(){
 
         //Entrada para adicionar um campeão.
         else if(entrada == 2){
-            campeoes novo_campeao;
-            cout << "Digite o nome, a classe, a região, o ano de lançamento e o pickrate do campeão a ser adicionado: " << endl;
-            cout << "Ex: Aatrox,Lutador,Runeterra,2013,6.3; " << endl;
-            cin.ignore();
-            getline(cin, novo_campeao.nome, ',');
-            getline(cin, novo_campeao.classe, ',');
-            getline(cin, novo_campeao.regiao, ',');
-            getline(cin, novo_campeao.ano, ',');
-            cin >> novo_campeao.pickrate;
-            cin.ignore();
-            //FALTA FAZER A SHELL SORT E COLOCAR TUDO EM MAIUSCULO.
+            if(ordem == 1){
+                int antigo = tamanho_vetor;
+                tamanho_vetor++;
+                aloca_vetor(perso, tamanho_vetor, antigo);
+                campeoes novo_campeao;
+                cout << "Digite o nome, a classe, a região, o ano de lançamento e o pickrate do campeão a ser adicionado: " << endl;
+                cout << "Ex: Aatrox,Lutador,Runeterra,2013,6.3; " << endl;
+                cin.ignore();
+                getline(cin, novo_campeao.nome, ',');
+                getline(cin, novo_campeao.classe, ',');
+                getline(cin, novo_campeao.regiao, ',');
+                getline(cin, novo_campeao.ano, ',');
+                cin >> novo_campeao.pickrate;
+                cin.ignore();
+                shell_sort(perso, tamanho_vetor);
+            }
+            
+            else{
+                int qual = 1;
+                ORDENACAO(qual, perso, tamanho_vetor);
+                int antigo = tamanho_vetor;
+                tamanho_vetor++;
+                aloca_vetor(perso, tamanho_vetor, antigo);
+                campeoes novo_campeao;
+                cout << "Digite o nome, a classe, a região, o ano de lançamento e o pickrate do campeão a ser adicionado: " << endl;
+                cout << "Ex: Aatrox,Lutador,Runeterra,2013,6.3; " << endl;
+                cin.ignore();
+                getline(cin, novo_campeao.nome, ',');
+                getline(cin, novo_campeao.classe, ',');
+                getline(cin, novo_campeao.regiao, ',');
+                getline(cin, novo_campeao.ano, ',');
+                cin >> novo_campeao.pickrate;
+                cin.ignore();
+                shell_sort(perso, tamanho_vetor);
+            }
         }
 
         //Entrada para remover um campeão.
