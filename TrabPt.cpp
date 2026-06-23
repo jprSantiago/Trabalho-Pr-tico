@@ -427,7 +427,8 @@ int main(){
             cout << "Saindo do programa." << endl;
             sair = true;
         }
-        
+       
+        //Entrada inválida.
         else{
             cout << "Escolha inválida. Selecione os números 1, 2, 3, 4, 5, 6 ou 7." << endl;
         }
