@@ -2,7 +2,7 @@
   João Pedro Ribeiro Santiago - 202610128
   Enzo Ribeiro Almeida - 202611181
   João Vitor Melo Alves de Freitas - 202610130
-TURMA : 10A.
+TURMA : 10B.
 TEMA: Campeões de League of Legends.
 
 */
