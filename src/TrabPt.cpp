@@ -12,6 +12,7 @@ struct campeoes{
     string regiao;
     string ano;
     float pickrate;
+    
 };
 
 //Função para gravar as alterações no arquivo CSV.
@@ -245,6 +246,40 @@ void maiusculo(string &para_transformar){
     }
 }
 
+//Procedimento que exclui um campeao.
+void remover(string nome_remocao, campeoes *&perso, int ordem, int tamanho){
+    if(ordem == 1){
+        string *vetorcomnomes =  new string[tamanho];
+        for(int i = 0; i < tamanho; i++){
+            vetorcomnomes[i] = perso[i].nome;
+        }
+        int indice = binaria(vetorcomnomes, nome_remocao, 0, tamanho - 1);
+        perso[indice].nome = "";
+        perso[indice].classe = "";
+        perso[indice].regiao = "";
+        perso[indice].ano = "";
+        perso[indice].pickrate = 0;
+        aloca_vetor(perso, tamanho - 1, tamanho);
+        delete[] vetorcomnomes;
+    }
+    else{
+        int qual = 1;
+        ORDENACAO(qual, perso, tamanho);
+        string *vetorcomnomes =  new string[tamanho];
+        for(int i = 0; i < tamanho; i++){
+            vetorcomnomes[i] = perso[i].nome;
+        }
+        int indice = binaria(vetorcomnomes, nome_remocao, 0, tamanho - 1);
+        perso[indice].nome = "";
+        perso[indice].classe = "";
+        perso[indice].regiao = "";
+        perso[indice].ano = "";
+        perso[indice].pickrate = 0;
+        aloca_vetor(perso, tamanho - 1, tamanho);
+        delete[] vetorcomnomes;
+    }
+}
+
 int main(){
 
     string linha;
@@ -450,7 +485,7 @@ int main(){
             cout << "Digite o nome do campeão a ser removido: " << endl;
             cin >> nome_remover;
             maiusculo(nome_remover);
-            //FALTA FAZER O REDIMENSIONAMENTO.
+            remover(nome_remover, perso, ordem, tamanho_vetor);
         }
         
         //Entrada para reordenar os campeões.
