@@ -1,3 +1,12 @@
+/*MEMBROS :
+  João Pedro Ribeiro Santiago - 202610128
+  Enzo Ribeiro De Almeida - 
+  João Vitor De Melo Freitas - 
+TURMA : 10A.
+TEMA: Campeões de League of Legends.
+
+*/
+
 #include <iostream>
 #include <fstream>
 #include <ctype.h>
