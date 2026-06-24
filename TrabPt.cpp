@@ -199,7 +199,6 @@ void shell_sort(campeoes *&perso, int tamanho){
     int j;
     while ( pos_gap >= 0 ){
         int gap = gaps[pos_gap];
-        cout << "gap: " << gap << endl;
 
         for (int i = gap; i < tamanho; i++) {
             value = perso[i].nome;
