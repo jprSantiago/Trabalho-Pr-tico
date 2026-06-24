@@ -89,6 +89,12 @@ void sequencial(string regioes[], string regiao, int tamanho_original, campeoes 
 
 // Procedimento de Busca onde Retorna o Campeao Buscado através do redirecionamento da busca correta.
 void BUSCA(int busca1, string pesq, int tam, campeoes perso[], string pesq2){
+    // Verificar se o vetor está vazio
+    if(tam <= 0){
+        cout << "Nenhum campeão cadastrado!" << endl;
+        return;
+    }
+    
     if(busca1 == 1 or busca1 == 2){
         string* vetorcomnomes = new string[tam];
         for(int i = 0; i < tam; i++){
@@ -147,8 +153,13 @@ void BUSCA(int busca1, string pesq, int tam, campeoes perso[], string pesq2){
 
 // Procedimento de Alocaçao quando o vetor de armazenamento de personagens enche.
 void aloca_vetor(campeoes *&vet, int tamanho_novo, int &tamanho_antigo){
+    if(tamanho_novo <= 0){
+        cout << "Erro: tamanho inválido para alocação!" << endl;
+        return;
+    }
+    
     campeoes *novo = new campeoes[tamanho_novo];
-    for(int i = 0; i < tamanho_antigo; i++){
+    for(int i = 0; i < tamanho_antigo && i < tamanho_novo; i++){
         novo[i].nome = vet[i].nome;
         novo[i].classe = vet[i].classe;
         novo[i].regiao = vet[i].regiao;
@@ -246,38 +257,84 @@ void maiusculo(string &para_transformar){
 }
 
 //Procedimento que exclui um campeao.
-void remover(string nome_remocao, campeoes *&perso, int ordem, int tamanho){
+void remover(string nome_remocao, campeoes *&vet, int ordem,  int &tamanho){
+    // Verificar se o vetor está vazio
+    if(tamanho <= 0){
+        cout << "Nenhum campeão para remover!" << endl;
+        return;
+    }
+    
+    // Criar vetor temporário com os nomes para busca binária
     if(ordem == 1){
-        string *vetorcomnomes =  new string[tamanho];
+        string *nomes = new string[tamanho];
         for(int i = 0; i < tamanho; i++){
-            vetorcomnomes[i] = perso[i].nome;
+            nomes[i] = vet[i].nome;
         }
-        int indice = binaria(vetorcomnomes, nome_remocao, 0, tamanho - 1);
-        perso[indice].nome = "";
-        perso[indice].classe = "";
-        perso[indice].regiao = "";
-        perso[indice].ano = "";
-        perso[indice].pickrate = 0;
-        aloca_vetor(perso, tamanho - 1, tamanho);
-        delete[] vetorcomnomes;
+        
+        // Buscar o índice do campeão
+        int indice = binaria(nomes, nome_remocao, 0, tamanho - 1);
+        delete[] nomes;
+        
+        if(indice == -1){
+            cout << "Campeão não encontrado!" << endl;
+            return;
+        }
+        
+        // Mover todos os elementos após o índice uma posição para trás
+        for(int i = indice; i < tamanho - 1; i++){
+            vet[i].nome = vet[i + 1].nome;
+            vet[i].classe = vet[i + 1].classe;
+            vet[i].regiao = vet[i + 1].regiao;
+            vet[i].ano = vet[i + 1].ano;
+            vet[i].pickrate = vet[i + 1].pickrate;
+        }
+        
+        // Reduzir o tamanho do vetor
+        int antigo = tamanho;
+        tamanho--;
+        aloca_vetor(vet, tamanho, antigo);
+        
+        cout << "Campeão removido com sucesso!" << endl;
     }
     else{
         int qual = 1;
-        ORDENACAO(qual, perso, tamanho);
-        string *vetorcomnomes =  new string[tamanho];
+        ORDENACAO(qual, vet, tamanho);
+        string *nomes = new string[tamanho];
         for(int i = 0; i < tamanho; i++){
-            vetorcomnomes[i] = perso[i].nome;
+            nomes[i] = vet[i].nome;
         }
-        int indice = binaria(vetorcomnomes, nome_remocao, 0, tamanho - 1);
-        perso[indice].nome = "";
-        perso[indice].classe = "";
-        perso[indice].regiao = "";
-        perso[indice].ano = "";
-        perso[indice].pickrate = 0;
-        aloca_vetor(perso, tamanho - 1, tamanho);
-        delete[] vetorcomnomes;
+        
+        // Buscar o índice do campeão
+        int indice = binaria(nomes, nome_remocao, 0, tamanho - 1);
+        delete[] nomes;
+        
+        if(indice == -1){
+            cout << "Campeão não encontrado!" << endl;
+            qual = 2;
+            ORDENACAO(qual, vet, tamanho);
+            return;
+        }
+        
+        // Mover todos os elementos após o índice uma posição para trás
+        for(int i = indice; i < tamanho - 1; i++){
+            vet[i].nome = vet[i + 1].nome;
+            vet[i].classe = vet[i + 1].classe;
+            vet[i].regiao = vet[i + 1].regiao;
+            vet[i].ano = vet[i + 1].ano;
+            vet[i].pickrate = vet[i + 1].pickrate;
+        }
+        
+        // Reduzir o tamanho do vetor
+        int antigo = tamanho;
+        tamanho--;
+        aloca_vetor(vet, tamanho, antigo);
+        qual = 2;
+        ORDENACAO(qual, vet, tamanho);
+        
+        cout << "Campeão removido com sucesso!" << endl;
     }
 }
+
 
 int main(){
 
@@ -452,6 +509,7 @@ int main(){
                 getline(cin, novo_campeao.ano, ',');
                 cin >> novo_campeao.pickrate;
                 cin.ignore();
+                perso[tamanho_vetor - 1] = novo_campeao;
                 shell_sort(perso, tamanho_vetor);
             }
             
@@ -474,6 +532,7 @@ int main(){
                 getline(cin, novo_campeao.ano, ',');
                 cin >> novo_campeao.pickrate;
                 cin.ignore();
+                perso[tamanho_vetor - 1] = novo_campeao;
                 shell_sort(perso, tamanho_vetor);
             }
         }
