@@ -26,13 +26,13 @@ struct campeoes{
 
 //Função para gravar as alterações no arquivo CSV.
 void Gravar_csv(campeoes *perso, int tamanho_vetor, int capacidade, int ordem){
-    ofstream arquivo2_csv("LOL.csv");
+    ofstream arquivo2_csv("LOL.csv", ios::trunc);
     if(not(arquivo2_csv)){
         cout << "Erro ao abrir o arquivo para gravação." << endl;
         return;
     }
     arquivo2_csv << "#nome,classe,regiao,ano de lançamento,pickrate em %;" << endl;
-    arquivo2_csv << capacidade << endl;
+    arquivo2_csv << 40 << endl;
     arquivo2_csv << tamanho_vetor << endl;
     arquivo2_csv << ordem << endl;
 
@@ -104,7 +104,10 @@ void BUSCA(int busca1, string pesq, int tam, campeoes perso[], string pesq2){
         return;
     }
     
-    if(busca1 == 1 or busca1 == 2){
+    // busca1: 1 = buscar por nome (binária)
+    //          2 = buscar por região (sequencial)
+    //          3 = buscar intervalo por nome (binária em dois nomes)
+    if(busca1 == 1){
         string* vetorcomnomes = new string[tam];
         for(int i = 0; i < tam; i++){
             vetorcomnomes[i] = perso[i].nome;
@@ -114,38 +117,38 @@ void BUSCA(int busca1, string pesq, int tam, campeoes perso[], string pesq2){
             cout << "Campeao nao encontrado!" << endl;
         }
         else{
-            if(busca1 == 1){
-                cout << perso[procura].nome << endl;
-                cout << perso[procura].classe << endl;
-                cout << perso[procura].regiao << endl;
-                cout << perso[procura].ano << endl;
-                cout << perso[procura].pickrate << endl;
+            cout << perso[procura].nome << endl;
+            cout << perso[procura].classe << endl;
+            cout << perso[procura].regiao << endl;
+            cout << perso[procura].ano << endl;
+            cout << perso[procura].pickrate << endl;
+        }
+        delete[] vetorcomnomes;
+    }
+    else if(busca1 == 3){
+        string* vetorcomnomes = new string[tam];
+        for(int i = 0; i < tam; i++){
+            vetorcomnomes[i] = perso[i].nome;
+        }
+        int primeiro = binaria(vetorcomnomes, pesq, 0, tam - 1);
+        int segundo = binaria(vetorcomnomes, pesq2, 0, tam - 1);
+
+        if(primeiro == -1 || segundo == -1){
+            cout << "Um ou ambos os campeoes nao foram encontrados!" << endl;
+        }
+        else{
+            if(primeiro > segundo){
+                int aux = primeiro;
+                primeiro = segundo;
+                segundo = aux;
             }
-            else{
-                // Buscar ambos os campeões
-                int primeiro = binaria(vetorcomnomes, pesq, 0, tam - 1);
-                int segundo = binaria(vetorcomnomes, pesq2, 0, tam - 1);
-                
-                if(primeiro == -1 || segundo == -1){
-                    cout << "Um ou ambos os campeoes nao foram encontrados!" << endl;
-                }
-                else{
-                    // Garantir que primeiro < segundo
-                    if(primeiro > segundo){
-                        int aux = primeiro;
-                        primeiro = segundo;
-                        segundo = aux;
-                    }
-                    
-                    for(int i = primeiro; i <= segundo; i++){
-                        cout << perso[i].nome << endl;
-                        cout << perso[i].classe << endl;
-                        cout << perso[i].regiao << endl;
-                        cout << perso[i].ano << endl;
-                        cout << perso[i].pickrate << endl;
-                        cout << endl;
-                    }
-                }
+            for(int i = primeiro; i <= segundo; i++){
+                cout << perso[i].nome << endl;
+                cout << perso[i].classe << endl;
+                cout << perso[i].regiao << endl;
+                cout << perso[i].ano << endl;
+                cout << perso[i].pickrate << endl;
+                cout << endl;
             }
         }
         delete[] vetorcomnomes;
@@ -481,7 +484,7 @@ int main(){
                 }
 
                 //Ordenado por ano.
-                else{
+                else if(busca1 == 3){
                     cout << "Para buscar por nome, os campeões serão considerdos em ordem alfabética." << endl;
                     int qual = 1;
                     ORDENACAO(qual, perso, tamanho_vetor);//Alterar para ordenar por nome.
@@ -585,6 +588,7 @@ int main(){
         //Entrada para salvar as alterações feitas no programa.
         else if(entrada == 5){
             //Criar subprograma para gravar as alterações no arquivo CSV.
+            arquivo_csv.close();
             Gravar_csv(perso, tamanho_vetor, capacidade, ordem);
         }
 
