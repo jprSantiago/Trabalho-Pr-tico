@@ -77,7 +77,7 @@ void sequencial(string regioes[], string regiao, int tamanho_original, campeoes 
     int definidor = 0;
     for(int i = 0; i < tamanho_original; i++){
         if(regiao == regioes[i]){
-            definidor++; 
+            definidor++;
         }
     }
     char resposta;
