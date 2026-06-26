@@ -24,6 +24,12 @@ struct campeoes{
     
 };
 
+// Declaraçao de que o Procedimento BUSCA ainda será feito, para poder ser usado nos outros Procedimentos.
+void BUSCA(int busca1, string pesq, int tam, campeoes perso[], string pesq2);
+
+//Declaraçao de que o Procedimento maiusculo ainda será feito, para poder ser usado nos outros Procedimneto.
+void maiusculo(string &para_transformar);
+
 //Função para gravar as alterações no arquivo CSV.
 void Gravar_csv(campeoes *perso, int tamanho_vetor, int capacidade, int ordem){
     ofstream arquivo2_csv("LOL.csv", ios::trunc);
@@ -46,7 +52,7 @@ void Gravar_csv(campeoes *perso, int tamanho_vetor, int capacidade, int ordem){
             arquivo2_csv << endl;
         }
     }
-
+    cout << "Gravaçao Feita com Sucesso" << endl;
     arquivo2_csv.close();
 }
 
@@ -66,9 +72,6 @@ int binaria(string nomes1[], string pesq, int pos_inicial, int pos_final){
     }
 }
 
-// Declaraçao de que o Procedimento BUSCA ainda será feito, para poder ser usado no Procedimento Sequencial.
-void BUSCA(int busca1, string pesq, int tam, campeoes perso[], string pesq2);
-
 // Funçao de Busca Sequencial Para as Regioes dos Campeoes.
 void sequencial(string regioes[], string regiao, int tamanho_original, campeoes perso[]){
     int definidor = 0;
@@ -79,7 +82,22 @@ void sequencial(string regioes[], string regiao, int tamanho_original, campeoes 
     }
     char resposta;
     string desejo;
-    if(definidor > 1){
+    if(definidor == 0){
+        cout << "Nenhum campeao encontrado nessa regiao!" << endl;
+    }
+    else if(definidor == 1){
+        for(int i = 0; i < tamanho_original; i++){
+            if(regiao == regioes[i]){
+                cout << perso[i].nome << endl;
+                cout << perso[i].classe << endl;
+                cout << perso[i].regiao << endl;
+                cout << perso[i].ano << endl;
+                cout << perso[i].pickrate << endl;
+                cout << endl;
+            }
+        }
+    }
+    else{
         cout << "Foram Encontrados: " << definidor << " Campeoes" << endl;
         for(int i = 0; i < tamanho_original; i++){
             if(regiao == regioes[i]){
@@ -90,6 +108,7 @@ void sequencial(string regioes[], string regiao, int tamanho_original, campeoes 
         string nada2 = "nada";
         cout << "Digite o nome do campeao que deseja" << endl;
         cin >> desejo;
+        maiusculo(desejo);
         int buscador = 1;
         BUSCA(buscador, desejo, tamanho_original, perso, nada2);
         
@@ -523,6 +542,7 @@ int main(){
                 cin.ignore();
                 perso[tamanho_vetor - 1] = novo_campeao;
                 shell_sort(perso, tamanho_vetor);
+                cout << "Campeao adicionado com sucesso! " << endl;
             }
             
             else{
@@ -546,6 +566,9 @@ int main(){
                 cin.ignore();
                 perso[tamanho_vetor - 1] = novo_campeao;
                 shell_sort(perso, tamanho_vetor);
+                cout << "Campeao adicionado com sucesso! " << endl;
+                qual = 2;
+                ORDENACAO(qual, perso, tamanho_vetor);
             }
         }
 
