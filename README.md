@@ -127,6 +127,8 @@ texto para letras maiúsculas, que eliminou falhas de digitação durante as bus
 a adaptação da ordenação do vetor antes de pesquisas específicas para otimizar a
 precisão dos algoritmos. Como resultado prático e acadêmico, o sistema atende a
 todos os requisitos propostos sem depender de funções prontas da linguagem para
+
+link repositório : https://github.com/jprSantiago/Trabalho-Pr-tico/tree/main
 a organização dos dados, rodando sem travamentos, atualizando o banco de dados
 corretamente e provando que a equipe conseguiu converter a teoria de algoritmos,
 estruturas dinâmicas e manipulação de arquivos em um software eficiente e
